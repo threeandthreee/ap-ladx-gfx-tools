@@ -37,19 +37,22 @@ const readImg = event => {
   })
 }
 
+const spriteWidth = 8
+const spriteHeight = 16
+
 const encodeImg = bitmap => {
-  let cols = bitmap.width / 8
-  let rows = bitmap.height / 16
+  let cols = bitmap.width / spriteWidth
+  let rows = bitmap.height / spriteHeight
   if(cols != Math.floor(cols) || rows != Math.floor(rows))
     return
   let result = []
   for (let row=0; row<rows; row++){
     for (let col=0; col<cols; col++){
-      for (let y=0; y<16; y++){
+      for (let y=0; y<spriteHeight; y++){
         let a = 0
         let b = 0
-        for (let x=0; x<8; x++){
-          let start = 4 * ((col*8+x) + cols*(row*16+y))
+        for (let x=0; x<spriteWidth; x++){
+          let start = 4 * ((col*spriteWidth+x) + cols*(row*spriteHeight+y))
           let [r, g, b] = bitmap.data.slice(start, start+3)
           if(r==128)
             a |= 128 >> x
@@ -64,8 +67,24 @@ const encodeImg = bitmap => {
 }
 
 const decodeImg = arr => {
-  let rows = 256 / 8
-  let cols =
+  let cols = 256 / spriteWidth
+  let rows = arr.length / 2 / spriteHeight / cols
+  if(rows != Math.floor(rows))
+    return
+  let index = 0
+  let result = []
+  for (let row=0; row<rows; row++){
+    for (let col=0; col<cols; col++){
+      for (let y=0; y<spriteHeight; y++){
+        let index = 2 * spriteHeight * (row * cols + col) + y
+        let a = arr[index]
+        let b = arr[index+1]
+        for (let x=0; x<spriteWidth; x++){
+          let mask = 1 << x
+        }
+      }
+    }
+  }
 }
 </script>
 
